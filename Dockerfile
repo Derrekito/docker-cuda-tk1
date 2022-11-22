@@ -34,6 +34,7 @@ RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5
 RUN echo "installing cuda cross tools"
 RUN apt-get update -y && apt-get install -y cuda-cross-armhf-6.5
 
+RUN apt-get install libblas-dev
 #RUN apt-get update -y && apt-get upgrade -y
 
 ENV PATH="/usr/local/cuda-6.5/bin:${PATH}"
