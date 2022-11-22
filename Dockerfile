@@ -20,22 +20,30 @@ COPY cuda-repo-ubuntu1404_6.5-19_amd64.deb /tmp/
 RUN dpkg -i /tmp/cuda-repo-ubuntu1404_6.5-19_amd64.deb
 RUN apt-get update -y && apt-get upgrade -y
 
-RUN echo "installing standard buildtools"
-RUN apt-get update -y && apt-get install -y     \
-    build-essential gcc-arm-linux-gnueabihf git
+#RUN echo "installing standard buildtools"
+#RUN apt-get update -y && apt-get install -y     \
+#    build-essential gcc-arm-linux-gnueabihf git
 
 #RUN echo "installing editers"
 #RUN apt-get update -y && apt-get install -y     \
 #    vim nano emacs
 
-RUN echo "installing cuda toolkit"
-RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5
+RUN echo "installing buildtools"
+RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5 cuda-cross-armhf-6.5 build-essential gcc-arm-linux-gnueabihf git gfortran-4.8-arm-linux-gnueabihf
+RUN ln -s /usr/bin/arm-linux-gnueabihf-gcc-ranlib-4.8 /usr/bin/arm-linux-gnueabihf-gcc-ranlib
+#gfortran-arm-linux-gnueabihfi
 
-RUN echo "installing cuda cross tools"
-RUN apt-get update -y && apt-get install -y cuda-cross-armhf-6.5
+#RUN echo "installing cuda cross tools"
+#RUN apt-get update -y && apt-get install -y cuda-cross-armhf-6.5
 
-RUN apt-get install libblas-dev
-#RUN apt-get update -y && apt-get upgrade -y
+#RUN echo "installing fortran tools"
+#RUN apt-get update -y && apt-cache search gfortran-arm-linux-gnueabihfi
 
 ENV PATH="/usr/local/cuda-6.5/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/usr/local/cuda-6.5/lib:$LD_LIBRARY_PATH"
+ENV export LD_LIBRARY_PATH="/usr/local/cuda-6.5/lib:$LD_LIBRARY_PATH"
+
+# Build Blas
+RUN git clone https://github.com/xianyi/OpenBLAS.git
+RUN export OMP_NUM_THREADS=4
+RUN cd ./OpenBLAS && make CC=arm-linux-gnueabihf-gcc-4.8 FC=arm-linux-gnueabihf-gfortran-4.8 HOSTCC=gcc-4.8 TARGET=CORTEXA15 USE_OPENMP=1
+RUN cd ./OpenBLAS && make PREFIX=/usr/local install
