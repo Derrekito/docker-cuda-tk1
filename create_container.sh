@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LOCAL_DIR="/home/derrekito/Projects/Spacebench"
+LOCAL_DIR="/home/derrekito/Projects/SpaceBench"
 CONTAINER_DIR="/shared"
 
 IMAGE_TAG="cudatools:6.5"
