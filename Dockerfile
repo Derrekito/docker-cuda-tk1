@@ -45,5 +45,18 @@ ENV export LD_LIBRARY_PATH="/usr/local/cuda-6.5/lib:$LD_LIBRARY_PATH"
 # Build Blas
 RUN git clone https://github.com/xianyi/OpenBLAS.git
 RUN export OMP_NUM_THREADS=4
-RUN cd ./OpenBLAS && make CC=arm-linux-gnueabihf-gcc-4.8 FC=arm-linux-gnueabihf-gfortran-4.8 HOSTCC=gcc-4.8 TARGET=CORTEXA15 USE_OPENMP=1
-RUN cd ./OpenBLAS && make PREFIX=/usr/local install
+RUN cd ./OpenBLAS && make \
+	CC=arm-linux-gnueabihf-gcc-4.8 \
+	FC=arm-linux-gnueabihf-gfortran-4.8 \
+	HOSTCC=gcc-4.8 \
+	TARGET=CORTEXA15 \
+	RANLIB=ranlib \
+	USE_OPENMP=1 
+RUN cd ./OpenBLAS && make \
+	CC=arm-linux-gnueabihf-gcc-4.8 \
+	FC=arm-linux-gnueabihf-gfortran-4.8 \
+	HOSTCC=gcc-4.8 \
+	TARGET=CORTEXA15 \
+	RANLIB=ranlib \
+	USE_OPENMP=1 \ 
+	PREFIX=/usr/local install
