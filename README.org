@@ -1,4 +1,4 @@
-* TK1 Compiler Docker Environment
+* TK1 Docker-Based Compiler Environment Guide
 ** Introduction
 The docker-cuda-tk1 project is a collection of bash scripts designed to streamline the process of setting up and managing a Docker container that runs CUDA 6.5. This can be especially useful for projects that require the CUDA parallel computing platform and the cuDNN deep neural network library.
 
