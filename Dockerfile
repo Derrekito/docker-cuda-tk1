@@ -29,7 +29,7 @@ RUN apt-get update -y && apt-get upgrade -y
 #    vim nano emacs
 
 RUN echo "installing buildtools"
-RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5 cuda-cross-armhf-6.5 build-essential gcc-arm-linux-gnueabihf git gfortran-4.8-arm-linux-gnueabihf
+RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5 cuda-cross-armhf-6.5 build-essential gcc-arm-linux-gnueabihf git gfortran-4.8-arm-linux-gnueabihf libboost-all-dev
 RUN ln -s /usr/bin/arm-linux-gnueabihf-gcc-ranlib-4.8 /usr/bin/arm-linux-gnueabihf-gcc-ranlib
 #gfortran-arm-linux-gnueabihfi
 
@@ -46,17 +46,24 @@ ENV export LD_LIBRARY_PATH="/usr/local/cuda-6.5/lib:$LD_LIBRARY_PATH"
 RUN git clone https://github.com/xianyi/OpenBLAS.git
 RUN export OMP_NUM_THREADS=4
 RUN cd ./OpenBLAS && make \
-	CC=arm-linux-gnueabihf-gcc-4.8 \
-	FC=arm-linux-gnueabihf-gfortran-4.8 \
-	HOSTCC=gcc-4.8 \
-	TARGET=CORTEXA15 \
-	RANLIB=ranlib \
-	USE_OPENMP=1 
+    CC=arm-linux-gnueabihf-gcc-4.8 \
+    FC=arm-linux-gnueabihf-gfortran-4.8 \
+    HOSTCC=gcc-4.8 \
+    TARGET=CORTEXA15 \
+    RANLIB=ranlib \
+    USE_OPENMP=1
 RUN cd ./OpenBLAS && make \
-	CC=arm-linux-gnueabihf-gcc-4.8 \
-	FC=arm-linux-gnueabihf-gfortran-4.8 \
-	HOSTCC=gcc-4.8 \
-	TARGET=CORTEXA15 \
-	RANLIB=ranlib \
-	USE_OPENMP=1 \ 
-	PREFIX=/usr/local install
+    CC=arm-linux-gnueabihf-gcc-4.8 \
+    FC=arm-linux-gnueabihf-gfortran-4.8 \
+    HOSTCC=gcc-4.8 \
+    TARGET=CORTEXA15 \
+    RANLIB=ranlib \
+    USE_OPENMP=1 \
+    PREFIX=/usr/local install
+
+RUN mkdir /opt/arm-sysroot
+RUN wget --no-parent -nd -P /opt/arm-sysroot -r --no-clobber -A "*armhf.deb" http://ports.ubuntu.com/ubuntu-ports/pool/universe/b/boost1.54/
+RUN wget --no-parent -nd -P /opt/arm-sysroot -r --no-clobber -A "*1.54*armhf.deb" http://ports.ubuntu.com/ubuntu-ports/pool/universe/b/boost-defaults/
+RUN wget --no-parent -nd -P /opt/arm-sysroot -r --no-clobber -A "*armhf.deb" http://ports.ubuntu.com/ubuntu-ports/pool/main/b/boost1.54/
+RUN cd /opt/arm-sysroot/ && \
+    for file in *.deb; do dpkg-deb --extract "$file" /opt/arm-sysroot; done

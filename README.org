@@ -1,0 +1,52 @@
+#TITLE: docker-cuda-tk1
+#AUTHOR: Derrek Landauer
+#EMAIL:Derrek.Landauer@bluehalo.com
+
+* Introduction
+The docker-cuda-tk1 project is a collection of bash scripts designed to streamline the process of setting up and managing a Docker container that runs CUDA 6.5. This can be especially useful for projects that require the CUDA parallel computing platform and the cuDNN deep neural network library.
+
+* Script Execution Order
+1. =build_image.sh=
+2. =create_container.sh=
+3. =run_container.sh=
+4. =stop_container.sh= (as needed)
+* Script Descriptions
+** =build_image.sh=
+This script builds a Docker image with CUDA and cuDNN libraries. Before building the image, it checks if the necessary CUDA and cuDNN files are present in the current directory and downloads them if they're not.
+
+Usage:
+
+Make sure Docker is installed and you have the necessary permissions to run Docker commands.
+Run the script in your terminal. If cuDNN is missing, the script will print a URL. Visit this URL to manually download the required cuDNN file, then run the script again. After successfully running the script, a Docker image tagged as "cudatools:6.5" will be created.
+
+** =create_container.sh=
+This script creates a Docker container from the image built by =build_image.sh=. If a local directory is provided as a command-line argument, it will be mounted to a directory within the container, allowing for shared access to files between your local machine and the Docker container. If no local directory is provided, a warning will be issued, but the Docker container will still be created and started.
+
+Usage:
+
+Provide the path to the local directory you want to share with the Docker container as a command-line argument when running the script. If no local directory is provided, the Docker container will start without any directories shared. Run the script in your terminal. This will create and start a Docker container named "docker-cuda".
+
+Examples:
+
+To create a Docker container with a shared local directory:
+
+#+begin_src bash
+./create_container.sh /path/to/local/dir
+#+end_src
+
+To create a Docker container without any shared directories:
+
+#+begin_src bash
+./create_container.sh
+#+end_src
+
+** =run_container.sh=
+This script starts an existing Docker container named "docker-cuda". If the container is already running, the script will simply attach to it.
+
+Usage:
+
+Make sure the Docker container "docker-cuda" has been created (using =create_container.sh=).
+Run the script in your terminal to start and attach to the "docker-cuda" container.
+
+** =stop_container.sh=
+This script stops the "docker-cuda" Docker container. Run the script in your terminal whenever you want to stop the "docker-cuda" container.
