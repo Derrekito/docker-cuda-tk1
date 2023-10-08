@@ -32,7 +32,7 @@ RUN apt-get update -y && apt-get upgrade -y
 
 # Install build tools and libraries
 RUN echo "installing buildtools"
-RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5 cuda-cross-armhf-6.5 build-essential gcc-arm-linux-gnueabihf git gfortran-4.8-arm-linux-gnueabihf libboost-all-dev cmake
+RUN apt-get update -y && apt-get install -y cuda-toolkit-6-5 cuda-cross-armhf-6.5 build-essential gcc-arm-linux-gnueabihf git gfortran-4.8-arm-linux-gnueabihf libboost-all-dev
 
 # Create a symbolic link
 RUN ln -s /usr/bin/arm-linux-gnueabihf-gcc-ranlib-4.8 /usr/bin/arm-linux-gnueabihf-gcc-ranlib
@@ -82,14 +82,22 @@ RUN cd /opt/arm-sysroot/ && \
 # Change the working directory to root
 WORKDIR /
 
-# Clone jsoncpp repository for a specific branch
-#RUN git clone -b 00.11.z https://github.com/Derrekito/jsoncpp.git
+#RUN wget -qO- "https://cmake.org/files/v3.8/cmake-3.8.0-Linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
+RUN wget -qO- "https://cmake.org/files/v3.14/cmake-3.14.0-Linux-x86_64.tar.gz" | tar --strip-components=1 -xz -C /usr/local
 
-# Build and install jsoncpp for ARM64 architecture
-# WORKDIR jsoncpp
-# RUN mkdir build
-# WORKDIR build
-# RUN cmake -DCMAKE_INSTALL_PREFIX=/usr/aarch64-linux-gnu \
-#     -DCMAKE_TOOLCHAIN_FILE=/aarch64-toolchain.cmake ..\
-#     && make \
-#     && make install
+
+COPY armv7l-toolchain.cmake /
+# Clone jsoncpp repository for a specific branch
+RUN git clone -b 00.11.z https://github.com/Derrekito/jsoncpp.git
+
+#Build and install jsoncpp for ARM64 architecture
+WORKDIR jsoncpp
+RUN mkdir build
+WORKDIR build
+
+RUN cmake -DCMAKE_INSTALL_PREFIX=/usr/arm-linux-gnueabihf \
+    -DCMAKE_TOOLCHAIN_FILE=/armv7l-toolchain.cmake ..\
+    && make \
+    && make install
+
+WORKDIR /
