@@ -53,4 +53,4 @@ RUN pip install https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0
 # Clone and build OpenBLAS
 RUN git clone https://github.com/xianyi/OpenBLAS.git
 RUN export OMP_NUM_THREADS=4
-RUN cd ./OpenBLAS && make CC=arm-linux-gnueabihf-gcc-4.8 FC=arm-linux-gnueabihf-gfortran-4.8 HOSTCC=gcc-4.8 TARGET=CORTEXA15 USE_OPENMP=1
+RUN cd ./OpenBLAS && make CC=arm-linux-gnueabihf-gcc-4.8 FC=arm-linux-gnueabihf-gfortran-4.8 HOSTCC=gcc-4.8 TARGET=CORTEXA15 NUM_THREADS=4 #USE_OPENMP=1
