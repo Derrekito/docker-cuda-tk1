@@ -50,7 +50,8 @@ RUN cd ./OpenBLAS && make \
     HOSTCC=gcc-4.8 \
     TARGET=CORTEXA15 \
     RANLIB=ranlib \
-    USE_OPENMP=1
+    NUM_THREADS=1
+    #USE_OPENMP=1
 
 # Install OpenBLAS
 RUN cd ./OpenBLAS && make \
@@ -59,7 +60,8 @@ RUN cd ./OpenBLAS && make \
     HOSTCC=gcc-4.8 \
     TARGET=CORTEXA15 \
     RANLIB=ranlib \
-    USE_OPENMP=1 \
+    NUM_THREAD=1\
+    #USE_OPENMP=1 \
     PREFIX=/usr/local install
 
 # Install DARKNET on TK1
@@ -101,3 +103,5 @@ RUN cmake -DCMAKE_INSTALL_PREFIX=/usr/arm-linux-gnueabihf \
     && make install
 
 WORKDIR /
+ENV LD_LIBRARY_PATH=/usr/arm-linux-gnueabihf/lib:$LD_LIBRARY_PATH
+
